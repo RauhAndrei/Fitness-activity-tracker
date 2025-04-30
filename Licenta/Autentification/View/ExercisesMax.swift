@@ -3,17 +3,22 @@ import SnapKit
 
 class ExercisesMax: UIView {
     
+    // MARK: - UI Components
     private let titleLabel = UILabel()
     private let subTitleLabel = UILabel()
     private let tableView = UITableView()
     
+    // MARK: - Properties
     private let options = ["<10", "10-30", "30-50", "50+"]
     var selectedIndex: Int?
-    
-    // Closure pentru a trimite selecția în ViewModel
+    var currentPageIndex: Int = 0
+    weak var viewModel: CreateAccountViewModel?
     var selectionHandler: ((Int) -> Void)?
     
-    init(title: String) {
+    // MARK: - Initialization
+    init(title: String, viewModel: CreateAccountViewModel? = nil, pageIndex: Int = 0) {
+        self.viewModel = viewModel
+        self.currentPageIndex = pageIndex
         super.init(frame: .zero)
         self.titleLabel.text = title
         setupUI()
@@ -23,23 +28,30 @@ class ExercisesMax: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Layout
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Forțăm table view să își actualizeze layout-ul după ce sunt setate limitele
         tableView.reloadData()
     }
     
+    // MARK: - UI Setup
     private func setupUI() {
-        // Setează culoarea de fundal pentru view-ul principal
         backgroundColor = .black
-        
-        // Configurează titlul
+        setupTitleLabel()
+        setupSubTitleLabel()
+        setupTableView()
+        setupConstraints()
+    }
+    
+    private func setupTitleLabel() {
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .center
         titleLabel.backgroundColor = .clear
-        
-        // Configurează subtitlul
+        addSubview(titleLabel)
+    }
+    
+    private func setupSubTitleLabel() {
         subTitleLabel.text = "How many can you do without interruption?"
         subTitleLabel.font = UIFont.systemFont(ofSize: 16)
         subTitleLabel.textColor = .white
@@ -47,8 +59,10 @@ class ExercisesMax: UIView {
         subTitleLabel.numberOfLines = 0
         subTitleLabel.backgroundColor = .clear
         subTitleLabel.lineBreakMode = .byWordWrapping
-
-        // Configurează tabelul
+        addSubview(subTitleLabel)
+    }
+    
+    private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -57,19 +71,13 @@ class ExercisesMax: UIView {
         tableView.isScrollEnabled = false
         tableView.layer.cornerRadius = 10
         tableView.clipsToBounds = true
-        
-        // Important: Setează aceste valori la zero pentru a evita problemele de auto-sizing
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
-        tableView.layer.cornerRadius = 10
-
-        // Adaugă subview-urile
-        addSubview(titleLabel)
-        addSubview(subTitleLabel)
         addSubview(tableView)
-
-        // Configurează constrângerile pentru subview-uri
+    }
+    
+    private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(20)
             make.leading.trailing.equalToSuperview().inset(20)
@@ -82,17 +90,22 @@ class ExercisesMax: UIView {
             make.height.greaterThanOrEqualTo(40)
         }
 
-        // Configurează constrângerile pentru table view
         tableView.snp.makeConstraints { make in
             make.top.equalTo(subTitleLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(options.count * 50) // 4 opțiuni * 50
-            make.width.equalToSuperview().multipliedBy(0.99)
+            make.height.equalTo(CGFloat(options.count * 50))
             make.bottom.lessThanOrEqualToSuperview().offset(-20).priority(.low)
         }
     }
+    
+    // MARK: - Public Methods
+    func setSelectedIndex(_ index: Int?) {
+        selectedIndex = index
+        tableView.reloadData()
+    }
 }
 
+// MARK: - UITableViewDataSource & UITableViewDelegate
 extension ExercisesMax: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return options.count
@@ -101,13 +114,10 @@ extension ExercisesMax: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        // Configurează celula
         cell.textLabel?.text = options[indexPath.row]
         cell.textLabel?.textColor = .white
         cell.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
         cell.selectionStyle = .none
-        
-        // Afișează checkmark pentru celula selectată
         cell.accessoryType = (selectedIndex == indexPath.row) ? .checkmark : .none
         cell.tintColor = .systemBlue
         
@@ -115,15 +125,17 @@ extension ExercisesMax: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50 // Înălțimea fixă pentru fiecare celulă
+        return 50
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Actualizează indexul selectat
         selectedIndex = indexPath.row
         tableView.reloadData()
         
-        // Trimite selecția prin closure
+        // Notify viewModel if available
+        viewModel?.updateSelectedIndex(for: indexPath.row, at: currentPageIndex)
+        
+        // Or use the closure
         selectionHandler?(indexPath.row)
     }
 }
