@@ -2,18 +2,27 @@ import UIKit
 import SnapKit
 
 class AccountSettingsViewController: UIViewController {
-    
+
     // MARK: - UI Components
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
-    
+
     private let contentView = UIView()
     private var fieldLabels = [UILabel]()
     private var textFields = [UITextField]()
-    
+
+    private let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "person.crop.circle")
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+
     private lazy var saveButton: UIButton = {
         let button = UIButton()
         button.setTitle("Save Changes", for: .normal)
@@ -23,30 +32,32 @@ class AccountSettingsViewController: UIViewController {
         button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         return button
     }()
-    
+
     // MARK: - ViewModel
     private let viewModel = AccountSettingsViewModel()
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupViewModelBindings()
+        setupKeyboardDismissGesture()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateTextFieldValues()
     }
-    
+
     // MARK: - Setup
     private func setupView() {
         view.backgroundColor = .black
         setupNavigationBar()
         setupScrollView()
         setupFormFields()
+        registerForKeyboardNotifications()
     }
-    
+
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "chevron.left"),
@@ -55,85 +66,91 @@ class AccountSettingsViewController: UIViewController {
             action: #selector(backAction)
         )
         navigationItem.leftBarButtonItem?.tintColor = .white
-        
+
         let titleLabel = UILabel()
         titleLabel.text = "ACCOUNT SETTINGS"
         titleLabel.font = .boldSystemFont(ofSize: 20)
         titleLabel.textColor = .white
         navigationItem.titleView = titleLabel
-        
+
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.isTranslucent = false
     }
-    
+
     private func setupScrollView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        
+
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
         }
     }
-    
+
     private func setupFormFields() {
+        contentView.addSubview(profileImageView)
+        profileImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(4) // SPACING MAI MIC
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(80)
+        }
+
         for (index, field) in viewModel.model.fields.enumerated() {
             let label = createLabel(text: field.label)
             let textField = createTextField(placeholder: field.placeholder)
             textField.tag = index
-            
+
             fieldLabels.append(label)
             textFields.append(textField)
             contentView.addSubview(label)
             contentView.addSubview(textField)
         }
-        
+
         contentView.addSubview(saveButton)
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
-        var previousView: UIView = contentView
-        
+        var previousView: UIView = profileImageView
+
         for (index, label) in fieldLabels.enumerated() {
             label.snp.makeConstraints { make in
-                make.top.equalTo(previousView).offset(index == 0 ? 20 : 60)
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().offset(-20)
+                make.top.equalTo(previousView.snp.bottom).offset(index == 0 ? 12 : 16)
+                make.leading.trailing.equalToSuperview().inset(20)
             }
-            
+
             let textField = textFields[index]
             textField.snp.makeConstraints { make in
-                make.top.equalTo(label.snp.bottom).offset(8)
+                make.top.equalTo(label.snp.bottom).offset(4)
                 make.leading.trailing.equalToSuperview().inset(20)
-                make.height.equalTo(50)
+                make.height.equalTo(44)
             }
-            
+
             previousView = textField
         }
-        
+
         saveButton.snp.makeConstraints { make in
-            make.top.equalTo(previousView.snp.bottom).offset(30)
+            make.top.equalTo(previousView.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(50)
-            make.bottom.equalToSuperview().offset(-30)
+            make.bottom.equalToSuperview().offset(-20)
         }
     }
-    
+
     private func setupViewModelBindings() {
         viewModel.didUpdateModel = { [weak self] in
             self?.updateTextFieldValues()
         }
-        
+
         viewModel.showAlert = { [weak self] title, message in
             self?.showAlert(title: title, message: message)
         }
     }
-    
-    // MARK: - UI Creation Helpers
+
+    // MARK: - Helpers
     private func createTextField(placeholder: String) -> UITextField {
         let textField = UITextField()
         textField.placeholder = placeholder
@@ -143,20 +160,21 @@ class AccountSettingsViewController: UIViewController {
         textField.layer.borderColor = UIColor.systemGray.cgColor
         textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 8
-        textField.textAlignment = .left
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         textField.leftViewMode = .always
         textField.autocorrectionType = .no
+        textField.returnKeyType = .done
+        textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        
+
         textField.attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [.foregroundColor: UIColor.systemGray]
         )
-        
+
         return textField
     }
-    
+
     private func createLabel(text: String) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -164,34 +182,82 @@ class AccountSettingsViewController: UIViewController {
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
     }
-    
-    // MARK: - Update Methods
+
     private func updateTextFieldValues() {
         for (index, field) in viewModel.model.fields.enumerated() {
             textFields[index].text = field.value
         }
     }
-    
+
     private func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
         present(alertController, animated: true)
     }
-    
-    // MARK: - Action Methods
+
+    private func setupKeyboardDismissGesture() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    // MARK: - Keyboard Handling
+    private func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+
+    @objc private func keyboardWillShow(notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            scrollView.contentInset.bottom = keyboardFrame.height + 10
+        }
+    }
+
+    @objc private func keyboardWillHide(notification: Notification) {
+        scrollView.contentInset.bottom = 0
+    }
+
+    // MARK: - Actions
     @objc private func backAction() {
         navigationController?.popViewController(animated: true)
     }
-    
+
     @objc private func textFieldDidChange(_ textField: UITextField) {
         viewModel.updateField(at: textField.tag, with: textField.text ?? "")
     }
-    
+
     @objc private func saveButtonTapped() {
         view.endEditing(true)
         viewModel.saveChanges()
     }
 }
+
+// MARK: - UITextFieldDelegate
+extension AccountSettingsViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
+
+
+
+
 
 //import UIKit
 //import SnapKit
