@@ -1,8 +1,8 @@
 import UIKit
 import SnapKit
 
-class FitnessProfileViewController: UIViewController {
-    
+class FitnessProfileViewController: UIViewController, UITextFieldDelegate {
+
     // MARK: - UI Components
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -44,8 +44,14 @@ class FitnessProfileViewController: UIViewController {
         view.backgroundColor = .black
         setupView()
         setupViewModelBindings()
+        setupKeyboardObservers()
+        setupDismissKeyboardGesture()
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     // MARK: - Setup
     private func setupView() {
         setupNavigation()
@@ -69,17 +75,16 @@ class FitnessProfileViewController: UIViewController {
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.greaterThanOrEqualToSuperview().priority(.low) // adăugat!
+            make.height.greaterThanOrEqualToSuperview().priority(.low)
         }
     }
     
     private func setupFormFields() {
-        // Eliminat: contentView.addSubview(titleLabel) ❌
-
         for (index, field) in viewModel.model.fields.enumerated() {
             let label = createLabel(text: field.label)
             let textField = createInputField(placeholder: field.placeholder)
             textField.tag = index
+            textField.delegate = self
             textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
             
             fieldLabels.append(label)
@@ -94,23 +99,23 @@ class FitnessProfileViewController: UIViewController {
     
     private func setupConstraints() {
         var previousView: UIView = contentView
-        
+
         for (index, label) in fieldLabels.enumerated() {
             label.snp.makeConstraints { make in
-                make.top.equalTo(index == 0 ? contentView.snp.top : previousView.snp.bottom).offset(index == 0 ? 20 : 30)
+                make.top.equalTo(index == 0 ? contentView.snp.top : previousView.snp.bottom).offset(index == 0 ? 20 : 20) // redus de la 30
                 make.leading.equalToSuperview().offset(20)
             }
-            
+
             let textField = textFields[index]
             textField.snp.makeConstraints { make in
-                make.top.equalTo(label.snp.bottom).offset(5)
+                make.top.equalTo(label.snp.bottom).offset(4) // redus de la 5
                 make.leading.trailing.equalToSuperview().inset(20)
                 make.height.equalTo(50)
             }
-            
+
             previousView = textField
         }
-        
+
         saveButton.snp.makeConstraints { make in
             make.top.equalTo(previousView.snp.bottom).offset(30)
             make.leading.trailing.equalToSuperview().inset(20)
@@ -118,18 +123,65 @@ class FitnessProfileViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-40)
         }
     }
+
     
     private func setupViewModelBindings() {
-        viewModel.didUpdateModel = { [weak self] in
-            // Poți actualiza UI-ul aici dacă este necesar
-        }
+        viewModel.didUpdateModel = { [weak self] in }
         
         viewModel.showAlert = { [weak self] title, message in
             self?.showAlert(title: title, message: message)
         }
     }
-    
+
+    // MARK: - Keyboard Handling
+
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        scrollView.contentInset.bottom = keyboardFrame.height + 20
+        scrollView.verticalScrollIndicatorInsets.bottom = keyboardFrame.height + 20
+
+        if let activeField = textFields.first(where: { $0.isFirstResponder }) {
+            scrollView.scrollRectToVisible(activeField.frame, animated: true)
+        }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        scrollView.contentInset.bottom = 0
+        scrollView.verticalScrollIndicatorInsets.bottom = 0
+    }
+
+    private func setupDismissKeyboardGesture() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        scrollView.addGestureRecognizer(tap)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    // MARK: - UITextFieldDelegate
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let nextTag = textField.tag + 1
+        if nextTag < textFields.count {
+            textFields[nextTag].becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+
     // MARK: - UI Helpers
+
     private func createInputField(placeholder: String) -> UITextField {
         let textField = UITextField()
         textField.placeholder = placeholder
@@ -167,6 +219,7 @@ class FitnessProfileViewController: UIViewController {
     }
     
     // MARK: - Actions
+
     @objc private func backButtonTapped() {
         dismiss(animated: true)
     }
@@ -180,6 +233,7 @@ class FitnessProfileViewController: UIViewController {
         viewModel.saveChanges()
     }
 }
+
 
 
 
