@@ -97,7 +97,10 @@ extension NotificationViewController: UITableViewDataSource, UITableViewDelegate
         // Configure switch
         let notificationSwitch = UISwitch()
         notificationSwitch.isOn = items[indexPath.row].isEnabled
-        notificationSwitch.onTintColor = .systemBlue
+        notificationSwitch.onTintColor = .white
+        notificationSwitch.thumbTintColor = .black
+        notificationSwitch.backgroundColor = .white
+        notificationSwitch.layer.cornerRadius = notificationSwitch.frame.height / 2
         notificationSwitch.tag = indexPath.row
         notificationSwitch.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
         cell.accessoryView = notificationSwitch
