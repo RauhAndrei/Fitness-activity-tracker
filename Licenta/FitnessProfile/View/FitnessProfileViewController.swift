@@ -69,8 +69,10 @@ class FitnessProfileViewController: UIViewController, UITextFieldDelegate {
         scrollView.addSubview(contentView)
         
         scrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalToSuperview()
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+
         
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -102,13 +104,13 @@ class FitnessProfileViewController: UIViewController, UITextFieldDelegate {
 
         for (index, label) in fieldLabels.enumerated() {
             label.snp.makeConstraints { make in
-                make.top.equalTo(index == 0 ? contentView.snp.top : previousView.snp.bottom).offset(index == 0 ? 20 : 20) // redus de la 30
+                make.top.equalTo(index == 0 ? contentView.snp.top : previousView.snp.bottom).offset(index == 0 ? 0 : 20)
                 make.leading.equalToSuperview().offset(20)
             }
 
             let textField = textFields[index]
             textField.snp.makeConstraints { make in
-                make.top.equalTo(label.snp.bottom).offset(4) // redus de la 5
+                make.top.equalTo(label.snp.bottom).offset(4)
                 make.leading.trailing.equalToSuperview().inset(20)
                 make.height.equalTo(50)
             }
@@ -124,9 +126,10 @@ class FitnessProfileViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    
     private func setupViewModelBindings() {
-        viewModel.didUpdateModel = { [weak self] in }
+        viewModel.didUpdateModel = { [weak self] in
+            // actualizează UI dacă e nevoie
+        }
         
         viewModel.showAlert = { [weak self] title, message in
             self?.showAlert(title: title, message: message)
@@ -221,7 +224,11 @@ class FitnessProfileViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Actions
 
     @objc private func backButtonTapped() {
-        dismiss(animated: true)
+        if let navigationController = navigationController {
+            navigationController.popViewController(animated: true)
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {
@@ -233,6 +240,7 @@ class FitnessProfileViewController: UIViewController, UITextFieldDelegate {
         viewModel.saveChanges()
     }
 }
+ 
 
 
 
