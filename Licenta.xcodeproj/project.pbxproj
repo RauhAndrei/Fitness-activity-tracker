@@ -16,6 +16,7 @@
 		9546AEF62D921FA500ED8BD8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9546AEF42D921FA500ED8BD8 /* LaunchScreen.storyboard */; };
 		9546AF012D921FA600ED8BD8 /* LicentaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AF002D921FA600ED8BD8 /* LicentaTests.swift */; };
 		9546AF0C2D921FA600ED8BD8 /* LicentaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AF0B2D921FA600ED8BD8 /* LicentaUITests.swift */; };
+		9568E6E62DC4566F00AE695F /* GenderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568E6E52DC4566F00AE695F /* GenderButton.swift */; };
 		9583DDA02DB9777A00472800 /* ExerciseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DD9F2DB9777A00472800 /* ExerciseModel.swift */; };
 		9583DDB02DB977D100472800 /* CreateAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DDAF2DB977D100472800 /* CreateAccountViewModel.swift */; };
 		9583DDB52DB9781200472800 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DDB42DB9781200472800 /* CreateAccountViewController.swift */; };
@@ -69,6 +70,7 @@
 		9546AF072D921FA600ED8BD8 /* LicentaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LicentaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9546AF0B2D921FA600ED8BD8 /* LicentaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicentaUITests.swift; sourceTree = "<group>"; };
 		9546AF0D2D921FA600ED8BD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9568E6E52DC4566F00AE695F /* GenderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderButton.swift; sourceTree = "<group>"; };
 		9583DD9F2DB9777A00472800 /* ExerciseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModel.swift; sourceTree = "<group>"; };
 		9583DDAF2DB977D100472800 /* CreateAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountViewModel.swift; sourceTree = "<group>"; };
 		9583DDB42DB9781200472800 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				95EA0D032D9883AD00C707C4 /* ExercisesMax.swift */,
 				95EA0D0E2D989F0B00C707C4 /* GenderSelectionView.swift */,
 				9583DDB42DB9781200472800 /* CreateAccountViewController.swift */,
+				9568E6E52DC4566F00AE695F /* GenderButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -576,6 +579,7 @@
 				9583DDB52DB9781200472800 /* CreateAccountViewController.swift in Sources */,
 				95EA0D0F2D989F0B00C707C4 /* GenderSelectionView.swift in Sources */,
 				9546AEE72D921FA200ED8BD8 /* AppDelegate.swift in Sources */,
+				9568E6E62DC4566F00AE695F /* GenderButton.swift in Sources */,
 				9583DE022DB9836B00472800 /* AccountSettingsModel.swift in Sources */,
 				95EA0D042D9883AD00C707C4 /* ExercisesMax.swift in Sources */,
 				9583DE282DB9874D00472800 /* FitnessProfileViewModel.swift in Sources */,

@@ -2,75 +2,65 @@ import UIKit
 import SnapKit
 
 class GenderSelectionView: UIView {
-    
-    private let titleLabel = UILabel()
-    private let maleButton = UIButton()
-    private let femaleButton = UIButton()
-    private var selectedButton: UIButton?
-    
-    init() {
-        super.init(frame: .zero)
+
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Gender"
+        label.font = UIFont.boldSystemFont(ofSize: 32)
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+    }()
+
+    private let maleButton = GenderButton(symbol: "♂", title: "Male")
+    private let femaleButton = GenderButton(symbol: "♀", title: "Female")
+    private var selectedButton: GenderButton?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupUI() {
-        // Configure title
-        titleLabel.text = "Gender"
-        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        titleLabel.textColor = .white
-        titleLabel.textAlignment = .left
-        
-        // Configure buttons
-        let buttonHeight: CGFloat = 50
-        let cornerRadius: CGFloat = 10
-        
-        maleButton.setTitle("Male", for: .normal)
-        femaleButton.setTitle("Female", for: .normal)
-        
-        [maleButton, femaleButton].forEach { button in
-            button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-            button.setTitleColor(.white, for: .normal)
-            button.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
-            button.layer.cornerRadius = cornerRadius
-            button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-        }
-        
-        // Add subviews
+        backgroundColor = .black
+
         addSubview(titleLabel)
         addSubview(maleButton)
         addSubview(femaleButton)
-        
-        // Setup constraints
+
+        maleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        femaleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(4)
+            make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(110)
+            make.centerX.equalToSuperview()
         }
-        
+
         maleButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(12)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(buttonHeight)
+            make.top.equalTo(titleLabel.snp.bottom).offset(40)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(200)
         }
-        
+
         femaleButton.snp.makeConstraints { make in
-            make.top.equalTo(maleButton.snp.bottom).offset(8)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(buttonHeight)
-            make.bottom.equalToSuperview()
+            make.top.equalTo(maleButton.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(200)
+            make.bottom.lessThanOrEqualToSuperview()
         }
     }
-    
-    @objc private func buttonTapped(_ sender: UIButton) {
-        selectedButton?.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
-        sender.backgroundColor = .systemBlue
+
+    @objc private func buttonTapped(_ sender: GenderButton) {
+        selectedButton?.isSelected = false
+        sender.isSelected = true
         selectedButton = sender
     }
-    
+
     func getSelectedGender() -> String? {
-        return selectedButton?.titleLabel?.text
+        return selectedButton?.title
     }
 }

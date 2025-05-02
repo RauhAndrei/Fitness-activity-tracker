@@ -1,10 +1,11 @@
 import UIKit
+import SnapKit
 
 class CreateAccountViewController: UIViewController {
     
     private let viewModel = CreateAccountViewModel()
     
-    private var exerciseViews: [ExercisesMax] = []
+    private var allPages: [UIView] = []
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
@@ -26,6 +27,8 @@ class CreateAccountViewController: UIViewController {
         return button
     }()
     
+    private var genderView: GenderSelectionView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -34,16 +37,30 @@ class CreateAccountViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        viewModel.onIndexChanged = { [weak self] index, isLast in
+        viewModel.onIndexChanged = { [weak self] index, _ in
             guard let self = self else { return }
             let offset = CGPoint(x: CGFloat(index) * self.scrollView.frame.width, y: 0)
             self.scrollView.setContentOffset(offset, animated: true)
-            self.nextButton.setTitle(isLast ? "Finish" : "Next >", for: .normal)
+            
+            let isOnGender = index == self.viewModel.exercises.count
+            self.nextButton.setTitle(isOnGender ? "Finish" : "Next >", for: .normal)
         }
     }
     
     @objc private func nextButtonTapped() {
-        viewModel.nextTapped()
+        let isOnGender = viewModel.currentIndex == viewModel.exercises.count
+        if isOnGender {
+            guard let gender = genderView?.getSelectedGender() else {
+                let alert = UIAlertController(title: "Select Gender", message: "Please select a gender to continue.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                present(alert, animated: true)
+                return
+            }
+            print("Gender selected: \(gender)")
+            navigationController?.popToRootViewController(animated: true)
+        } else {
+            viewModel.nextTapped()
+        }
     }
     
     private func setupUI() {
@@ -60,14 +77,21 @@ class CreateAccountViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(nextButton)
         
+        // Adaugă exercițiile
         for (index, model) in viewModel.exercises.enumerated() {
             let exerciseView = ExercisesMax(title: model.title)
             exerciseView.selectionHandler = { [weak self] selectedIndex in
                 self?.viewModel.updateSelectedIndex(for: selectedIndex, at: index)
             }
-            exerciseViews.append(exerciseView)
+            allPages.append(exerciseView)
             contentView.addSubview(exerciseView)
         }
+        
+        // Adaugă GenderSelectionView
+        let genderSelection = GenderSelectionView()
+        genderView = genderSelection
+        allPages.append(genderSelection)
+        contentView.addSubview(genderSelection)
         
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
@@ -87,19 +111,19 @@ class CreateAccountViewController: UIViewController {
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.height.equalTo(scrollView)
-            make.width.equalTo(scrollView).multipliedBy(exerciseViews.count)
+            make.width.equalTo(scrollView).multipliedBy(allPages.count)
         }
         
-        for (index, view) in exerciseViews.enumerated() {
-            view.snp.makeConstraints { make in
+        for (index, page) in allPages.enumerated() {
+            page.snp.makeConstraints { make in
                 make.top.bottom.equalToSuperview()
                 make.width.equalTo(scrollView)
                 if index == 0 {
                     make.leading.equalTo(contentView)
                 } else {
-                    make.leading.equalTo(exerciseViews[index - 1].snp.trailing)
+                    make.leading.equalTo(allPages[index - 1].snp.trailing)
                 }
-                if index == exerciseViews.count - 1 {
+                if index == allPages.count - 1 {
                     make.trailing.equalTo(contentView)
                 }
             }
@@ -118,7 +142,7 @@ extension CreateAccountViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let index = Int(round(scrollView.contentOffset.x / scrollView.frame.width))
         viewModel.currentIndex = index
-        let isLast = viewModel.isLastExercise
-        nextButton.setTitle(isLast ? "Finish" : "Next >", for: .normal)
+        let isOnGender = index == viewModel.exercises.count
+        nextButton.setTitle(isOnGender ? "Finish" : "Next >", for: .normal)
     }
 }
