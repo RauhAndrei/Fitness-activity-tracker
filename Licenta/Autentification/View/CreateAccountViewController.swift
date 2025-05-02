@@ -4,7 +4,6 @@ import SnapKit
 class CreateAccountViewController: UIViewController {
     
     private let viewModel = CreateAccountViewModel()
-    
     private var allPages: [UIView] = []
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -28,6 +27,7 @@ class CreateAccountViewController: UIViewController {
     }()
     
     private var genderView: GenderSelectionView?
+    private var heightView: HeightSelectionView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,30 +37,36 @@ class CreateAccountViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        viewModel.onIndexChanged = { [weak self] index, _ in
+        viewModel.onIndexChanged = { [weak self] index in
             guard let self = self else { return }
             let offset = CGPoint(x: CGFloat(index) * self.scrollView.frame.width, y: 0)
             self.scrollView.setContentOffset(offset, animated: true)
             
-            let isOnGender = index == self.viewModel.exercises.count
-            self.nextButton.setTitle(isOnGender ? "Finish" : "Next >", for: .normal)
+            let isOnLastPage = index == self.allPages.count - 1
+            self.nextButton.setTitle(isOnLastPage ? "Finish" : "Next >", for: .normal)
         }
     }
     
     @objc private func nextButtonTapped() {
-        let isOnGender = viewModel.currentIndex == viewModel.exercises.count
-        if isOnGender {
-            guard let gender = genderView?.getSelectedGender() else {
-                let alert = UIAlertController(title: "Select Gender", message: "Please select a gender to continue.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
-                present(alert, animated: true)
+        let isOnLastPage = viewModel.currentIndex == allPages.count - 1
+        
+        if isOnLastPage {
+            guard let gender = genderView?.getSelectedGender(),
+                  let height = heightView?.getSelectedHeight() else {
+                showAlert(title: "Complete All Fields", message: "Please select gender and height to continue.")
                 return
             }
-            print("Gender selected: \(gender)")
+            print("Account created with gender: \(gender), height: \(height)cm")
             navigationController?.popToRootViewController(animated: true)
         } else {
             viewModel.nextTapped()
         }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
     
     private func setupUI() {
@@ -77,7 +83,7 @@ class CreateAccountViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(nextButton)
         
-        // Adaugă exercițiile
+        // Add exercises
         for (index, model) in viewModel.exercises.enumerated() {
             let exerciseView = ExercisesMax(title: model.title)
             exerciseView.selectionHandler = { [weak self] selectedIndex in
@@ -87,11 +93,17 @@ class CreateAccountViewController: UIViewController {
             contentView.addSubview(exerciseView)
         }
         
-        // Adaugă GenderSelectionView
+        // Add GenderSelectionView
         let genderSelection = GenderSelectionView()
         genderView = genderSelection
         allPages.append(genderSelection)
         contentView.addSubview(genderSelection)
+        
+        // Add HeightSelectionView
+        let heightSelection = HeightSelectionView()
+        heightView = heightSelection
+        allPages.append(heightSelection)
+        contentView.addSubview(heightSelection)
         
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
@@ -142,7 +154,7 @@ extension CreateAccountViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let index = Int(round(scrollView.contentOffset.x / scrollView.frame.width))
         viewModel.currentIndex = index
-        let isOnGender = index == viewModel.exercises.count
-        nextButton.setTitle(isOnGender ? "Finish" : "Next >", for: .normal)
+        let isOnLastPage = index == allPages.count - 1
+        nextButton.setTitle(isOnLastPage ? "Finish" : "Next >", for: .normal)
     }
 }

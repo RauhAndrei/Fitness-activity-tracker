@@ -17,6 +17,7 @@
 		9546AF012D921FA600ED8BD8 /* LicentaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AF002D921FA600ED8BD8 /* LicentaTests.swift */; };
 		9546AF0C2D921FA600ED8BD8 /* LicentaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AF0B2D921FA600ED8BD8 /* LicentaUITests.swift */; };
 		9568E6E62DC4566F00AE695F /* GenderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568E6E52DC4566F00AE695F /* GenderButton.swift */; };
+		9568E6EB2DC4587400AE695F /* HeightSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568E6EA2DC4587400AE695F /* HeightSelectionView.swift */; };
 		9583DDA02DB9777A00472800 /* ExerciseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DD9F2DB9777A00472800 /* ExerciseModel.swift */; };
 		9583DDB02DB977D100472800 /* CreateAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DDAF2DB977D100472800 /* CreateAccountViewModel.swift */; };
 		9583DDB52DB9781200472800 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DDB42DB9781200472800 /* CreateAccountViewController.swift */; };
@@ -71,6 +72,7 @@
 		9546AF0B2D921FA600ED8BD8 /* LicentaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicentaUITests.swift; sourceTree = "<group>"; };
 		9546AF0D2D921FA600ED8BD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9568E6E52DC4566F00AE695F /* GenderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderButton.swift; sourceTree = "<group>"; };
+		9568E6EA2DC4587400AE695F /* HeightSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightSelectionView.swift; sourceTree = "<group>"; };
 		9583DD9F2DB9777A00472800 /* ExerciseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModel.swift; sourceTree = "<group>"; };
 		9583DDAF2DB977D100472800 /* CreateAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountViewModel.swift; sourceTree = "<group>"; };
 		9583DDB42DB9781200472800 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				95EA0D0E2D989F0B00C707C4 /* GenderSelectionView.swift */,
 				9583DDB42DB9781200472800 /* CreateAccountViewController.swift */,
 				9568E6E52DC4566F00AE695F /* GenderButton.swift */,
+				9568E6EA2DC4587400AE695F /* HeightSelectionView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -572,6 +575,7 @@
 				95EA0CD12D94AF6C00C707C4 /* NotificationViewController.swift in Sources */,
 				9583DDED2DB981DA00472800 /* NotificationViewModel.swift in Sources */,
 				9583DDA02DB9777A00472800 /* ExerciseModel.swift in Sources */,
+				9568E6EB2DC4587400AE695F /* HeightSelectionView.swift in Sources */,
 				9583DDB02DB977D100472800 /* CreateAccountViewModel.swift in Sources */,
 				9583DDD02DB97E7C00472800 /* SettingsViewModel.swift in Sources */,
 				9583DE0A2DB983AA00472800 /* AccountSettingsViewModel.swift in Sources */,
