@@ -28,6 +28,7 @@ class CreateAccountViewController: UIViewController {
     
     private var genderView: GenderSelectionView?
     private var heightView: HeightSelectionView?
+    private var fitnessLevelView: FitnessLevelView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,11 +53,22 @@ class CreateAccountViewController: UIViewController {
         
         if isOnLastPage {
             guard let gender = genderView?.getSelectedGender(),
-                  let height = heightView?.getSelectedHeight() else {
-                showAlert(title: "Complete All Fields", message: "Please select gender and height to continue.")
+                  let height = heightView?.getSelectedHeight(),
+                  let fitnessLevel = fitnessLevelView?.getSelectedIndex() else {
+                showAlert(title: "Complete All Fields", message: "Please select all options to continue.")
                 return
             }
-            print("Account created with gender: \(gender), height: \(height)cm")
+            
+            viewModel.selectedGender = gender
+            viewModel.selectedHeight = height
+            viewModel.selectedFitnessLevel = fitnessLevel
+            
+            print("Account created with settings:")
+            print("Gender: \(gender)")
+            print("Height: \(height)cm")
+            print("Fitness Level: \(fitnessLevel)")
+            print("Exercises: \(viewModel.exercises)")
+            
             navigationController?.popToRootViewController(animated: true)
         } else {
             viewModel.nextTapped()
@@ -104,6 +116,13 @@ class CreateAccountViewController: UIViewController {
         heightView = heightSelection
         allPages.append(heightSelection)
         contentView.addSubview(heightSelection)
+        
+        // Add FitnessLevelView
+        let fitnessView = FitnessLevelView()
+        fitnessLevelView = fitnessView
+        allPages.append(fitnessView)
+        contentView.addSubview(fitnessView)
+
         
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
