@@ -6,7 +6,7 @@ class CreateAccountViewModel {
         ExerciseModel(title: "Max Pullups", selectedIndex: nil)
     ]
     
-    var currentIndex: Int = 3 {
+    var currentIndex: Int = 0 {
         didSet {
             onIndexChanged?(currentIndex)
         }
