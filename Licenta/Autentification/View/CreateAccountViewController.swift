@@ -30,6 +30,7 @@ class CreateAccountViewController: UIViewController {
     private var heightView: HeightSelectionView?
     private var fitnessLevelView: FitnessLevelView?
     private var goalsView: GoalsView?
+    private var accountDetailsView: AccountDetailsView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,30 +54,59 @@ class CreateAccountViewController: UIViewController {
         let isOnLastPage = viewModel.currentIndex == allPages.count - 1
         
         if isOnLastPage {
-            guard let gender = genderView?.getSelectedGender(),
-                  let height = heightView?.getSelectedHeight(),
-                  let fitnessLevel = fitnessLevelView?.getSelectedIndex(),
-                  let goalIndex = goalsView?.getSelectedIndex() else {
-                showAlert(title: "Complete All Fields", message: "Please select all options to continue.")
+            guard let accountDetailsView = accountDetailsView,
+                  accountDetailsView.isValid() else {
+                showAlert(title: "Complete All Fields",
+                         message: "Please complete all account details before finishing.")
                 return
             }
             
-            viewModel.selectedGender = gender
-            viewModel.selectedHeight = height
-            viewModel.selectedFitnessLevel = fitnessLevel
-            viewModel.selectedGoalIndex = goalIndex
-            
-            print("Account created with settings:")
-            print("Gender: \(gender)")
-            print("Height: \(height)cm")
-            print("Fitness Level: \(fitnessLevel)")
-            print("Goal: \(goalIndex)")
-            print("Exercises: \(viewModel.exercises)")
-            
+            saveAllDataToViewModel()
+            printAccountDetails()
             navigationController?.popToRootViewController(animated: true)
         } else {
-            viewModel.nextTapped()
+            let nextIndex = viewModel.currentIndex + 1
+            viewModel.currentIndex = nextIndex
+            
+            let offset = CGPoint(x: CGFloat(nextIndex) * scrollView.frame.width, y: 0)
+            scrollView.setContentOffset(offset, animated: true)
+            
+            let isOnLastPage = nextIndex == allPages.count - 1
+            nextButton.setTitle(isOnLastPage ? "Finish" : "Next >", for: .normal)
         }
+    }
+    
+    private func saveAllDataToViewModel() {
+        if let accountDetails = accountDetailsView?.getAccountDetails() {
+            viewModel.username = accountDetails.username
+            viewModel.name = accountDetails.name
+            viewModel.email = accountDetails.email
+        }
+        
+        viewModel.selectedGender = genderView?.getSelectedGender()
+        viewModel.selectedHeight = heightView?.getSelectedHeight()
+        viewModel.selectedFitnessLevel = fitnessLevelView?.getSelectedIndex()
+        viewModel.selectedGoalIndex = goalsView?.getSelectedIndex()
+        
+        for (index, page) in allPages.enumerated() {
+            if let exerciseView = page as? ExercisesMax {
+                if let selectedIndex = exerciseView.selectedIndex {
+                    viewModel.updateSelectedIndex(for: selectedIndex, at: index)
+                }
+            }
+        }
+    }
+    
+    private func printAccountDetails() {
+        print("Account created with settings:")
+        print("Username: \(viewModel.username)")
+        print("Name: \(viewModel.name)")
+        print("Email: \(viewModel.email)")
+        print("Gender: \(viewModel.selectedGender ?? "Not selected")")
+        print("Height: \(viewModel.selectedHeight ?? 0)cm")
+        print("Fitness Level: \(viewModel.selectedFitnessLevel ?? -1)")
+        print("Goal: \(viewModel.selectedGoalIndex ?? -1)")
+        print("Exercises: \(viewModel.exercises)")
     }
     
     private func showAlert(title: String, message: String) {
@@ -133,6 +163,12 @@ class CreateAccountViewController: UIViewController {
         allPages.append(goalsSelection)
         contentView.addSubview(goalsSelection)
         
+        // Add AccountDetailsView (last page)
+        let accountView = AccountDetailsView()
+        accountDetailsView = accountView
+        allPages.append(accountView)
+        contentView.addSubview(accountView)
+        
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
@@ -140,6 +176,13 @@ class CreateAccountViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.leading.trailing.equalToSuperview().inset(20)
+        }
+        
+        nextButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.trailing.equalToSuperview().inset(20)
+            make.width.equalTo(120)
+            make.height.equalTo(56)
         }
         
         scrollView.snp.makeConstraints { make in
@@ -167,13 +210,6 @@ class CreateAccountViewController: UIViewController {
                     make.trailing.equalTo(contentView)
                 }
             }
-        }
-        
-        nextButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
-            make.trailing.equalToSuperview().inset(20)
-            make.width.equalTo(120)
-            make.height.equalTo(56)
         }
     }
 }

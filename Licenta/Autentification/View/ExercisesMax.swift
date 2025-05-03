@@ -10,7 +10,7 @@ class ExercisesMax: UIView {
     
     // MARK: - Properties
     private let options = ["<10", "10-30", "30-50", ">50"]
-    private var selectedIndex: Int?
+    var selectedIndex: Int?
     var currentPageIndex: Int = 0
     weak var viewModel: CreateAccountViewModel?
     var selectionHandler: ((Int) -> Void)?
