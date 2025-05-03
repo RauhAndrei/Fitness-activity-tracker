@@ -1,5 +1,10 @@
 import Foundation
 
+struct ExerciseModel {
+    let title: String
+    var selectedIndex: Int?
+}
+
 struct AccountDetailsModel {
     var username: String?
     var name: String?
@@ -18,9 +23,4 @@ struct CreateAccountModel {
     var fitnessLevel: String?
     var goals: String?
     var accountDetailsModel: AccountDetailsModel?
-}
-
-struct ExerciseModel {
-    let title: String
-    var selectedIndex: Int?
 }

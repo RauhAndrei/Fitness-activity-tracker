@@ -23,7 +23,7 @@
 		9568E6F02DC4618F00AE695F /* ExerciseOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568E6EF2DC4618F00AE695F /* ExerciseOptionCell.swift */; };
 		9568E6F52DC4655A00AE695F /* FitnessLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568E6F42DC4655A00AE695F /* FitnessLevelView.swift */; };
 		9568E6FA2DC465C100AE695F /* FitnessLevelOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568E6F92DC465C100AE695F /* FitnessLevelOptionView.swift */; };
-		9583DDA02DB9777A00472800 /* ExerciseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DD9F2DB9777A00472800 /* ExerciseModel.swift */; };
+		9583DDA02DB9777A00472800 /* CreateAccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DD9F2DB9777A00472800 /* CreateAccountModel.swift */; };
 		9583DDB02DB977D100472800 /* CreateAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DDAF2DB977D100472800 /* CreateAccountViewModel.swift */; };
 		9583DDB52DB9781200472800 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DDB42DB9781200472800 /* CreateAccountViewController.swift */; };
 		9583DDC72DB97E3400472800 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9583DDC62DB97E3400472800 /* SettingsModel.swift */; };
@@ -83,7 +83,7 @@
 		9568E6EF2DC4618F00AE695F /* ExerciseOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseOptionCell.swift; sourceTree = "<group>"; };
 		9568E6F42DC4655A00AE695F /* FitnessLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessLevelView.swift; sourceTree = "<group>"; };
 		9568E6F92DC465C100AE695F /* FitnessLevelOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessLevelOptionView.swift; sourceTree = "<group>"; };
-		9583DD9F2DB9777A00472800 /* ExerciseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModel.swift; sourceTree = "<group>"; };
+		9583DD9F2DB9777A00472800 /* CreateAccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountModel.swift; sourceTree = "<group>"; };
 		9583DDAF2DB977D100472800 /* CreateAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountViewModel.swift; sourceTree = "<group>"; };
 		9583DDB42DB9781200472800 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		9583DDC62DB97E3400472800 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 		9583DDB92DB97A1C00472800 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9583DD9F2DB9777A00472800 /* ExerciseModel.swift */,
+				9583DD9F2DB9777A00472800 /* CreateAccountModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -591,7 +591,7 @@
 				95EA0CD12D94AF6C00C707C4 /* NotificationViewController.swift in Sources */,
 				9583DDED2DB981DA00472800 /* NotificationViewModel.swift in Sources */,
 				9568E6F02DC4618F00AE695F /* ExerciseOptionCell.swift in Sources */,
-				9583DDA02DB9777A00472800 /* ExerciseModel.swift in Sources */,
+				9583DDA02DB9777A00472800 /* CreateAccountModel.swift in Sources */,
 				9568E6EB2DC4587400AE695F /* HeightSelectionView.swift in Sources */,
 				9583DDB02DB977D100472800 /* CreateAccountViewModel.swift in Sources */,
 				9568E6FA2DC465C100AE695F /* FitnessLevelOptionView.swift in Sources */,
