@@ -39,7 +39,7 @@ class CreateAccountViewModel {
     }
 
     var allPagesCount: Int {
-        return exercises.count + 5
+        return exercises.count + 6
     }
 
     // MARK: - Logic
