@@ -76,7 +76,8 @@ class CreateAccountViewController: UIViewController {
         scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.bounces = false
-        
+        scrollView.isScrollEnabled = false
+
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         view.addSubview(titleLabel)
