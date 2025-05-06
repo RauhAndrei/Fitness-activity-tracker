@@ -36,12 +36,12 @@ class GenderSelectionView: UIView {
         femaleButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
 
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(110)
+            make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(50)
             make.centerX.equalToSuperview()
         }
 
         maleButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(40)
+            make.top.equalTo(titleLabel.snp.bottom).offset(30)
             make.centerX.equalToSuperview()
             make.width.height.equalTo(200)
         }
