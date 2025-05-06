@@ -10,6 +10,7 @@
 		09214FD30DFF037BCBE2C40D /* Pods_Licenta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E43701D6C87E5DB669F681A1 /* Pods_Licenta.framework */; };
 		953744212DC57EAC0030A649 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953744202DC57EAC0030A649 /* GoalsView.swift */; };
 		9537442E2DC5876A0030A649 /* AccountDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537442D2DC5876A0030A649 /* AccountDetailsView.swift */; };
+		953744362DCAA0170030A649 /* WeightSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953744352DCAA0170030A649 /* WeightSelectionView.swift */; };
 		9546AEE72D921FA200ED8BD8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AEE62D921FA200ED8BD8 /* AppDelegate.swift */; };
 		9546AEE92D921FA200ED8BD8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AEE82D921FA200ED8BD8 /* SceneDelegate.swift */; };
 		9546AEEE2D921FA200ED8BD8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9546AEEC2D921FA200ED8BD8 /* Main.storyboard */; };
@@ -64,6 +65,7 @@
 		5E0AA061716468959B7CE00B /* Pods-Licenta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Licenta.debug.xcconfig"; path = "Target Support Files/Pods-Licenta/Pods-Licenta.debug.xcconfig"; sourceTree = "<group>"; };
 		953744202DC57EAC0030A649 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 		9537442D2DC5876A0030A649 /* AccountDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsView.swift; sourceTree = "<group>"; };
+		953744352DCAA0170030A649 /* WeightSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightSelectionView.swift; sourceTree = "<group>"; };
 		9546AEE32D921FA200ED8BD8 /* Licenta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Licenta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9546AEE62D921FA200ED8BD8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9546AEE82D921FA200ED8BD8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 			children = (
 				95EA0D032D9883AD00C707C4 /* ExercisesMax.swift */,
 				9568E6EF2DC4618F00AE695F /* ExerciseOptionCell.swift */,
+				953744352DCAA0170030A649 /* WeightSelectionView.swift */,
 				953744202DC57EAC0030A649 /* GoalsView.swift */,
 				9537442D2DC5876A0030A649 /* AccountDetailsView.swift */,
 				95EA0D0E2D989F0B00C707C4 /* GenderSelectionView.swift */,
@@ -591,6 +594,7 @@
 				95EA0CD12D94AF6C00C707C4 /* NotificationViewController.swift in Sources */,
 				9583DDED2DB981DA00472800 /* NotificationViewModel.swift in Sources */,
 				9568E6F02DC4618F00AE695F /* ExerciseOptionCell.swift in Sources */,
+				953744362DCAA0170030A649 /* WeightSelectionView.swift in Sources */,
 				9583DDA02DB9777A00472800 /* CreateAccountModel.swift in Sources */,
 				9568E6EB2DC4587400AE695F /* HeightSelectionView.swift in Sources */,
 				9583DDB02DB977D100472800 /* CreateAccountViewModel.swift in Sources */,

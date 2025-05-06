@@ -98,6 +98,10 @@ class CreateAccountViewController: UIViewController {
         allPages.append(genderView)
         contentView.addSubview(genderView)
         
+        let weightView = WeightSelectionView()
+        allPages.append(weightView)
+        contentView.addSubview(weightView)
+        
         let heightView = HeightSelectionView()
         viewModel.heightView = heightView
         allPages.append(heightView)
