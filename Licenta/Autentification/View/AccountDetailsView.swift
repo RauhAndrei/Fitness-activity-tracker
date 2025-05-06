@@ -43,6 +43,8 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
         tf.textContentType = .none
+        tf.placeholder = "Enter your username"  // Placeholder text
+        tf.attributedPlaceholder = NSAttributedString(string: "Enter your username", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
     
@@ -65,6 +67,8 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
         tf.textContentType = .none
+        tf.placeholder = "Enter your full name"  // Placeholder text
+        tf.attributedPlaceholder = NSAttributedString(string: "Enter your full name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
     
@@ -90,6 +94,8 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.textContentType = .none
         tf.autocapitalizationType = .none
         tf.autocorrectionType = .no
+        tf.placeholder = "Enter a strong password"  // Placeholder text
+        tf.attributedPlaceholder = NSAttributedString(string: "Enter a strong password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
     
@@ -114,6 +120,8 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
         tf.textContentType = .none
+        tf.placeholder = "Enter your email address"  // Placeholder text
+        tf.attributedPlaceholder = NSAttributedString(string: "Enter your email address", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
     
@@ -162,48 +170,48 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         }
         
         usernameTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(30)
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)  // Schimbat de la 30 la 16
             make.leading.trailing.equalToSuperview().inset(16)
         }
-        
+
         usernameTextField.snp.makeConstraints { make in
             make.top.equalTo(usernameTitleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(60)
         }
-        
+
         nameTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(usernameTextField.snp.bottom).offset(30)
+            make.top.equalTo(usernameTextField.snp.bottom).offset(16)  // Schimbat de la 30 la 16
             make.leading.trailing.equalToSuperview().inset(16)
         }
-        
+
         nameTextField.snp.makeConstraints { make in
             make.top.equalTo(nameTitleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(60)
         }
-        
+
         passwordTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameTextField.snp.bottom).offset(30)
+            make.top.equalTo(nameTextField.snp.bottom).offset(16)  // Schimbat de la 30 la 16
             make.leading.trailing.equalToSuperview().inset(16)
         }
-        
+
         passwordTextField.snp.makeConstraints { make in
             make.top.equalTo(passwordTitleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(60)
         }
-        
+
         emailTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(passwordTextField.snp.bottom).offset(30)
+            make.top.equalTo(passwordTextField.snp.bottom).offset(16)  // Schimbat de la 30 la 16
             make.leading.trailing.equalToSuperview().inset(16)
         }
-        
+
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(emailTitleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(60)
-            make.bottom.equalToSuperview().offset(-16) // Asigurăm că e ultimul element
+            make.bottom.equalToSuperview().offset(-16)
         }
     }
     
@@ -250,18 +258,40 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     @objc private func keyboardWillShow(notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
+        if let userInfo = notification.userInfo,
+           let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            // Creează un inset pentru scroll view când tastatura apare
+            let keyboardHeight = keyboardFrame.height
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+            scrollView.scrollIndicatorInsets = scrollView.contentInset
+
+            // Muta scroll-ul astfel încât câmpul activ să fie vizibil
+            if let activeField = findFirstResponder() {
+                scrollView.scrollRectToVisible(activeField.frame, animated: true)
+            }
         }
-        
-        let bottomInset = keyboardFrame.height
-        scrollView.contentInset.bottom = bottomInset
     }
-    
+
     @objc private func keyboardWillHide(notification: Notification) {
-        scrollView.contentInset.bottom = 0
+        // Resetează contentInset și scrollIndicatorInsets atunci când tastatura dispare
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
     }
+
+    // Funcție care returnează câmpul activ
+    private func findFirstResponder() -> UIView? {
+        if usernameTextField.isFirstResponder {
+            return usernameTextField
+        } else if nameTextField.isFirstResponder {
+            return nameTextField
+        } else if passwordTextField.isFirstResponder {
+            return passwordTextField
+        } else if emailTextField.isFirstResponder {
+            return emailTextField
+        }
+        return nil
+    }
+
 }
