@@ -27,7 +27,7 @@ class ExerciseOptionCell: UITableViewCell {
         containerView.backgroundColor = UIColor(white: 0.1, alpha: 1.0)
         containerView.layer.cornerRadius = 15
         containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.gray.cgColor
+        containerView.layer.borderColor = UIColor.gray.cgColor // Default border color is gray
         containerView.clipsToBounds = true
         contentView.addSubview(containerView)
         
@@ -48,22 +48,25 @@ class ExerciseOptionCell: UITableViewCell {
         selectionIndicator.layer.cornerRadius = 15
         containerView.insertSubview(selectionIndicator, at: 0)
         
-        // Constraints
+        // Constraints for containerView to make sure it doesn't exceed the screen edges
         containerView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0))
+            make.edges.equalTo(contentView).inset(UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)) // Adds proper padding
         }
         
+        // Constraints for optionLabel
         optionLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.centerY.equalToSuperview()
         }
         
+        // Constraints for radioButton
         radioButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.centerY.equalToSuperview()
             make.width.height.equalTo(24)
         }
         
+        // Constraints for selectionIndicator
         selectionIndicator.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -72,13 +75,31 @@ class ExerciseOptionCell: UITableViewCell {
     func configure(with option: String, isSelected: Bool) {
         optionLabel.text = option
         
+        // Set radioButton image based on selection state
         let imageName = isSelected ? "largecircle.fill.circle" : "circle"
         radioButton.setImage(UIImage(systemName: imageName), for: .normal)
         
         // Animate selection change (subtle border color change)
         UIView.animate(withDuration: 0.2) {
             self.selectionIndicator.alpha = isSelected ? 1 : 0
-            self.containerView.layer.borderColor = isSelected ? UIColor.systemTeal.cgColor : UIColor.gray.cgColor
+            self.containerView.layer.borderColor = isSelected ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
+            self.containerView.transform = isSelected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+        }
+        
+        // Spring animation on selection
+        if isSelected {
+            UIView.animate(withDuration: 0.4,
+                           delay: 0,
+                           usingSpringWithDamping: 0.4,
+                           initialSpringVelocity: 0.6,
+                           options: [.curveEaseOut],
+                           animations: {
+                self.containerView.transform = CGAffineTransform(scaleX: 1.02, y: 1.02)
+            }) { _ in
+                UIView.animate(withDuration: 0.3) {
+                    self.containerView.transform = .identity
+                }
+            }
         }
     }
 }
