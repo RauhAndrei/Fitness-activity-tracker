@@ -75,27 +75,10 @@ class ExerciseOptionCell: UITableViewCell {
         let imageName = isSelected ? "largecircle.fill.circle" : "circle"
         radioButton.setImage(UIImage(systemName: imageName), for: .normal)
         
-        // Animate selection change
+        // Animate selection change (subtle border color change)
         UIView.animate(withDuration: 0.2) {
             self.selectionIndicator.alpha = isSelected ? 1 : 0
             self.containerView.layer.borderColor = isSelected ? UIColor.systemTeal.cgColor : UIColor.gray.cgColor
-            self.containerView.transform = isSelected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
-        }
-        
-        // Add subtle pulse animation when selected
-        if isSelected {
-            UIView.animate(withDuration: 0.4,
-                           delay: 0,
-                           usingSpringWithDamping: 0.4,
-                           initialSpringVelocity: 0.6,
-                           options: [.curveEaseOut],
-                           animations: {
-                self.containerView.transform = CGAffineTransform(scaleX: 1.02, y: 1.02)
-            }) { _ in
-                UIView.animate(withDuration: 0.3) {
-                    self.containerView.transform = .identity
-                }
-            }
         }
     }
 }
