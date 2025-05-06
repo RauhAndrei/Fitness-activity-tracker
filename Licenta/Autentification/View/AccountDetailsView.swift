@@ -1,7 +1,18 @@
 import UIKit
 import SnapKit
 
-class AccountDetailsView: UIView {
+class AccountDetailsView: UIView, UITextFieldDelegate {
+    
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -31,6 +42,7 @@ class AccountDetailsView: UIView {
         tf.clipsToBounds = true
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
+        tf.textContentType = .none
         return tf
     }()
     
@@ -52,6 +64,7 @@ class AccountDetailsView: UIView {
         tf.clipsToBounds = true
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
+        tf.textContentType = .none
         return tf
     }()
     
@@ -63,26 +76,21 @@ class AccountDetailsView: UIView {
         return label
     }()
     
-    private let passwordButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Change password", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        button.contentHorizontalAlignment = .left
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.gray.cgColor
-        button.clipsToBounds = true
-        contentEdgeInsetsFix(for: button)
-        return button
-    }()
-    
-    private let passwordIcon: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "eye")
-        imageView.tintColor = .gray
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    let passwordTextField: UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 18)
+        tf.textColor = .white
+        tf.isSecureTextEntry = true
+        tf.layer.cornerRadius = 10
+        tf.layer.borderWidth = 1
+        tf.layer.borderColor = UIColor.gray.cgColor
+        tf.clipsToBounds = true
+        tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
+        tf.leftViewMode = .always
+        tf.textContentType = .none
+        tf.autocapitalizationType = .none
+        tf.autocorrectionType = .no
+        return tf
     }()
     
     private let emailTitleLabel: UILabel = {
@@ -105,6 +113,7 @@ class AccountDetailsView: UIView {
         tf.clipsToBounds = true
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
+        tf.textContentType = .none
         return tf
     }()
     
@@ -112,6 +121,9 @@ class AccountDetailsView: UIView {
         super.init(frame: frame)
         setupUI()
         setupConstraints()
+        setupDelegates()
+        setupTapGesture()
+        configureKeyboardHandling()
     }
     
     required init?(coder: NSCoder) {
@@ -120,20 +132,30 @@ class AccountDetailsView: UIView {
     
     private func setupUI() {
         backgroundColor = .black
+        addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
-        addSubview(titleLabel)
-        addSubview(usernameTitleLabel)
-        addSubview(usernameTextField)
-        addSubview(nameTitleLabel)
-        addSubview(nameTextField)
-        addSubview(passwordTitleLabel)
-        addSubview(passwordButton)
-        addSubview(passwordIcon)
-        addSubview(emailTitleLabel)
-        addSubview(emailTextField)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(usernameTitleLabel)
+        contentView.addSubview(usernameTextField)
+        contentView.addSubview(nameTitleLabel)
+        contentView.addSubview(nameTextField)
+        contentView.addSubview(passwordTitleLabel)
+        contentView.addSubview(passwordTextField)
+        contentView.addSubview(emailTitleLabel)
+        contentView.addSubview(emailTextField)
     }
     
     private func setupConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.width.equalTo(scrollView)
+            make.top.bottom.equalTo(scrollView)
+        }
+        
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
             make.leading.trailing.equalToSuperview().inset(16)
@@ -166,20 +188,14 @@ class AccountDetailsView: UIView {
             make.leading.trailing.equalToSuperview().inset(16)
         }
         
-        passwordButton.snp.makeConstraints { make in
+        passwordTextField.snp.makeConstraints { make in
             make.top.equalTo(passwordTitleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(60)
         }
         
-        passwordIcon.snp.makeConstraints { make in
-            make.centerY.equalTo(passwordButton)
-            make.trailing.equalToSuperview().inset(36)
-            make.width.height.equalTo(24)
-        }
-        
         emailTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(passwordButton.snp.bottom).offset(30)
+            make.top.equalTo(passwordTextField.snp.bottom).offset(30)
             make.leading.trailing.equalToSuperview().inset(16)
         }
         
@@ -187,7 +203,37 @@ class AccountDetailsView: UIView {
             make.top.equalTo(emailTitleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(60)
+            make.bottom.equalToSuperview().offset(-16) // Asigurăm că e ultimul element
         }
+    }
+    
+    private func setupDelegates() {
+        usernameTextField.delegate = self
+        nameTextField.delegate = self
+        passwordTextField.delegate = self
+        emailTextField.delegate = self
+    }
+    
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func dismissKeyboard() {
+        endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == usernameTextField {
+            nameTextField.becomeFirstResponder()
+        } else if textField == nameTextField {
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
+            emailTextField.becomeFirstResponder()
+        } else if textField == emailTextField {
+            emailTextField.resignFirstResponder() // Ascunde tastatura
+        }
+        return true
     }
     
     func isValid() -> Bool {
@@ -197,14 +243,25 @@ class AccountDetailsView: UIView {
     }
     
     func getAccountDetails() -> (username: String, name: String, email: String) {
-        return (usernameTextField.text ?? "",
-                nameTextField.text ?? "",
-                emailTextField.text ?? "")
+        return (usernameTextField.text ?? "", nameTextField.text ?? "", emailTextField.text ?? "")
     }
     
-    // Static helper to add padding for UIButton title
-    private static func contentEdgeInsetsFix(for button: UIButton) {
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+    private func configureKeyboardHandling() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        
+        let bottomInset = keyboardFrame.height
+        scrollView.contentInset.bottom = bottomInset
+    }
+    
+    @objc private func keyboardWillHide(notification: Notification) {
+        scrollView.contentInset.bottom = 0
     }
 }
-
