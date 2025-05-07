@@ -4,7 +4,9 @@ class CreateAccountViewModel {
     
     // MARK: - State
     var currentIndex: Int = 0 {
-        didSet { onIndexChanged?(currentIndex) }
+        didSet {
+            onIndexChanged?(currentIndex)
+        }
     }
     
     var exercises: [ExerciseModel] = [
@@ -23,6 +25,7 @@ class CreateAccountViewModel {
     weak var fitnessLevelView: FitnessLevelView?
     weak var goalsView: GoalsView?
     weak var accountDetailsView: AccountDetailsView?
+    var viewController: CreateAccountViewController?
     
     // MARK: - Data
     var username: String = ""
@@ -35,17 +38,29 @@ class CreateAccountViewModel {
     var selectedGoalIndex: Int?
 
     var isOnLastPage: Bool {
-        currentIndex == allPagesCount - 1
+        return currentIndex == allPagesCount - 1
     }
 
     var allPagesCount: Int {
-        return exercises.count + 6
+        return exercises.count + 7
     }
 
     // MARK: - Logic
     func nextTapped() {
-        guard currentIndex < allPagesCount - 1 else { return }
-        currentIndex += 1
+        // Verifică dacă suntem pe ultima pagină
+        if currentIndex == allPagesCount - 2 {
+            // Validarea câmpurilor doar pe ultima pagină
+            if let accountDetailsView = accountDetailsView,
+               let viewController = viewController,
+               !accountDetailsView.validateAndShowAlertIfNeeded(on: viewController) {
+                return // Oprește dacă sunt câmpuri necompletate pe ultima pagină
+            }
+        }
+        
+        // Dacă nu suntem pe ultima pagină, putem naviga fără validare
+        if currentIndex < allPagesCount - 1 {
+            currentIndex += 1
+        }
     }
     
     func updateSelectedIndex(for index: Int, at exerciseIndex: Int) {
@@ -60,15 +75,10 @@ class CreateAccountViewModel {
 
     func saveFinalAccountDetails() {
         if let accountDetails = accountDetailsView?.getAccountDetails() {
-            username = accountDetails.username
-            name = accountDetails.name
-            email = accountDetails.email
+            username = accountDetails.username ?? ""
+            name = accountDetails.name ?? ""
+            email = accountDetails.email ?? ""
         }
-        
-        selectedGender = genderView?.getSelectedGender()
-        selectedHeight = heightView?.getSelectedHeight()
-        selectedFitnessLevel = fitnessLevelView?.getSelectedIndex()
-        selectedGoalIndex = goalsView?.getSelectedIndex()
     }
 
     func getAccountInfo() -> String {

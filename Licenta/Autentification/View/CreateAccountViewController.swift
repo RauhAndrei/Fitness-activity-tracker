@@ -32,6 +32,7 @@ class CreateAccountViewController: UIViewController {
         setupUI()
         setupConstraints()
         bindViewModel()
+        viewModel.viewController = self
     }
     
     private func bindViewModel() {

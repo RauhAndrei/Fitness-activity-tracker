@@ -293,5 +293,46 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         }
         return nil
     }
+    
+    // Funcție pentru validarea unui email simplu
+    func isValidEmail(_ email: String) -> Bool {
+        // Expresie regulată simplă pentru a verifica dacă email-ul conține "@" și "."
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
+    }
+    
+    func validateAndShowAlertIfNeeded(on viewController: UIViewController) -> Bool {
+        if usernameTextField.text?.isEmpty ?? true {
+            showAlert(on: viewController, title: "Missing Username", message: "Please enter a username.")
+            return false
+        }
+        if nameTextField.text?.isEmpty ?? true {
+            showAlert(on: viewController, title: "Missing Name", message: "Please enter your full name.")
+            return false
+        }
+        if passwordTextField.text?.isEmpty ?? true {
+            showAlert(on: viewController, title: "Missing Password", message: "Please enter a password.")
+            return false
+        }
+        if emailTextField.text?.isEmpty ?? true {
+            showAlert(on: viewController, title: "Missing Email", message: "Please enter your email address.")
+            return false
+        }
+        
+        if let email = emailTextField.text, !isValidEmail(email) {
+            showAlert(on: viewController, title: "Invalid Email", message: "Please enter a valid email address.")
+            return false
+        }
+        
+        return true
+    }
+
+    // General alert display function with title
+    func showAlert(on viewController: UIViewController, title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        viewController.present(alert, animated: true, completion: nil)
+    }
 
 }
