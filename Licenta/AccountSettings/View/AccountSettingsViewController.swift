@@ -109,6 +109,20 @@ class AccountSettingsViewController: UIViewController {
             contentView.addSubview(textField)
         }
 
+        let fitnessLevelLabel = createLabel(text: "Fitness Level")
+        let fitnessLevelTextField = createTextField(placeholder: "Enter your fitness level")
+        fieldLabels.append(fitnessLevelLabel)
+        textFields.append(fitnessLevelTextField)
+        contentView.addSubview(fitnessLevelLabel)
+        contentView.addSubview(fitnessLevelTextField)
+
+        let goalsLabel = createLabel(text: "Goals")
+        let goalsTextField = createTextField(placeholder: "Enter your goals")
+        fieldLabels.append(goalsLabel)
+        textFields.append(goalsTextField)
+        contentView.addSubview(goalsLabel)
+        contentView.addSubview(goalsTextField)
+
         contentView.addSubview(saveButton)
         setupConstraints()
     }
