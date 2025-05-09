@@ -43,7 +43,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
         tf.textContentType = .none
-        tf.placeholder = "Enter your username"  // Placeholder text
+        tf.placeholder = "Enter your username"
         tf.attributedPlaceholder = NSAttributedString(string: "Enter your username", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
@@ -67,7 +67,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
         tf.textContentType = .none
-        tf.placeholder = "Enter your full name"  // Placeholder text
+        tf.placeholder = "Enter your full name"
         tf.attributedPlaceholder = NSAttributedString(string: "Enter your full name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
@@ -94,7 +94,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.textContentType = .none
         tf.autocapitalizationType = .none
         tf.autocorrectionType = .no
-        tf.placeholder = "Enter a strong password"  // Placeholder text
+        tf.placeholder = "Enter a strong password"
         tf.attributedPlaceholder = NSAttributedString(string: "Enter a strong password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
@@ -120,7 +120,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         tf.leftViewMode = .always
         tf.textContentType = .none
-        tf.placeholder = "Enter your email address"  // Placeholder text
+        tf.placeholder = "Enter your email address"
         tf.attributedPlaceholder = NSAttributedString(string: "Enter your email address", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         return tf
     }()
@@ -170,7 +170,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         }
         
         usernameTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(16)  // Schimbat de la 30 la 16
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
             make.leading.trailing.equalToSuperview().inset(16)
         }
 
@@ -181,7 +181,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         }
 
         nameTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(usernameTextField.snp.bottom).offset(16)  // Schimbat de la 30 la 16
+            make.top.equalTo(usernameTextField.snp.bottom).offset(16)
             make.leading.trailing.equalToSuperview().inset(16)
         }
 
@@ -192,7 +192,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         }
 
         passwordTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameTextField.snp.bottom).offset(16)  // Schimbat de la 30 la 16
+            make.top.equalTo(nameTextField.snp.bottom).offset(16)
             make.leading.trailing.equalToSuperview().inset(16)
         }
 
@@ -203,7 +203,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         }
 
         emailTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(passwordTextField.snp.bottom).offset(16)  // Schimbat de la 30 la 16
+            make.top.equalTo(passwordTextField.snp.bottom).offset(16)
             make.leading.trailing.equalToSuperview().inset(16)
         }
 
@@ -211,7 +211,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
             make.top.equalTo(emailTitleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(60)
-            make.bottom.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview().offset(-40) // Increased bottom space
         }
     }
     
@@ -239,7 +239,7 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         } else if textField == passwordTextField {
             emailTextField.becomeFirstResponder()
         } else if textField == emailTextField {
-            emailTextField.resignFirstResponder() // Ascunde tastatura
+            emailTextField.resignFirstResponder()
         }
         return true
     }
@@ -260,43 +260,35 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
     }
 
     @objc private func keyboardWillShow(notification: Notification) {
-        if let userInfo = notification.userInfo,
-           let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            // Creează un inset pentru scroll view când tastatura apare
-            let keyboardHeight = keyboardFrame.height
-            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
-            scrollView.scrollIndicatorInsets = scrollView.contentInset
-
-            // Muta scroll-ul astfel încât câmpul activ să fie vizibil
-            if let activeField = findFirstResponder() {
-                scrollView.scrollRectToVisible(activeField.frame, animated: true)
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let keyboardHeight = keyboardFrame.height
+        let minimalOffset: CGFloat = 10 // Offset minim necesar
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight + minimalOffset, right: 0)
+        
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+        
+        if emailTextField.isFirstResponder {
+            let emailFieldFrame = emailTextField.convert(emailTextField.bounds, to: scrollView)
+            let emailFieldBottom = emailFieldFrame.maxY
+            let visibleAreaHeight = scrollView.bounds.height - keyboardHeight
+            
+            // Scroll doar dacă câmpul este parțial acoperit
+            if emailFieldBottom > visibleAreaHeight {
+                let scrollOffset = emailFieldBottom - visibleAreaHeight + minimalOffset
+                scrollView.setContentOffset(CGPoint(x: 0, y: scrollOffset), animated: true)
             }
         }
     }
-
+    
     @objc private func keyboardWillHide(notification: Notification) {
-        // Resetează contentInset și scrollIndicatorInsets atunci când tastatura dispare
         scrollView.contentInset = .zero
         scrollView.scrollIndicatorInsets = .zero
     }
 
-    // Funcție care returnează câmpul activ
-    private func findFirstResponder() -> UIView? {
-        if usernameTextField.isFirstResponder {
-            return usernameTextField
-        } else if nameTextField.isFirstResponder {
-            return nameTextField
-        } else if passwordTextField.isFirstResponder {
-            return passwordTextField
-        } else if emailTextField.isFirstResponder {
-            return emailTextField
-        }
-        return nil
-    }
-    
-    // Funcție pentru validarea unui email simplu
     func isValidEmail(_ email: String) -> Bool {
-        // Expresie regulată simplă pentru a verifica dacă email-ul conține "@" și "."
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
@@ -328,11 +320,9 @@ class AccountDetailsView: UIView, UITextFieldDelegate {
         return true
     }
 
-    // General alert display function with title
     func showAlert(on viewController: UIViewController, title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         viewController.present(alert, animated: true, completion: nil)
     }
-
 }
