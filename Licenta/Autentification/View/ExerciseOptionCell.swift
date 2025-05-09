@@ -43,7 +43,7 @@ class ExerciseOptionCell: UITableViewCell {
         containerView.addSubview(radioButton)
         
         // Selection Indicator (for animation)
-        selectionIndicator.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
+//        selectionIndicator.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
         selectionIndicator.alpha = 0
         selectionIndicator.layer.cornerRadius = 15
         containerView.insertSubview(selectionIndicator, at: 0)
@@ -82,7 +82,7 @@ class ExerciseOptionCell: UITableViewCell {
         // Animate selection change (subtle border color change)
         UIView.animate(withDuration: 0.2) {
             self.selectionIndicator.alpha = isSelected ? 1 : 0
-            self.containerView.layer.borderColor = isSelected ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
+//            self.containerView.layer.borderColor = isSelected ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
             self.containerView.transform = isSelected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
         }
         
