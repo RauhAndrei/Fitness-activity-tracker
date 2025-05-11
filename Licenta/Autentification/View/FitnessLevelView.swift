@@ -60,6 +60,7 @@ class FitnessLevelView: UIView {
         }
         
         setupConstraints()
+        selectOption(at: 0) // <- selecția implicită
     }
     
     private func setupConstraints() {

@@ -19,6 +19,7 @@ class ExercisesMax: UIView {
     init(title: String, viewModel: CreateAccountViewModel? = nil, pageIndex: Int = 0) {
         self.viewModel = viewModel
         self.currentPageIndex = pageIndex
+        self.selectedIndex = 0 // Select first option by default
         super.init(frame: .zero)
         self.titleLabel.text = title
         setupUI()
@@ -77,7 +78,7 @@ class ExercisesMax: UIView {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(subTitleLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(CGFloat(options.count * 70)) // Increased height for better spacing
+            make.height.equalTo(CGFloat(options.count * 70))
         }
     }
 }
@@ -98,33 +99,26 @@ extension ExercisesMax: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70 // Increased height for better spacing
+        return 70
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         updateSelection(newIndex: indexPath.row)
         
-        // Provide haptic feedback
         let generator = UISelectionFeedbackGenerator()
         generator.selectionChanged()
     }
     
     private func updateSelection(newIndex: Int) {
-        // Create index paths for reloading
         var indexPathsToReload = [IndexPath(row: newIndex, section: 0)]
         
-        // If there was a previous selection, add it to reload list
         if let prevSelected = selectedIndex, prevSelected != newIndex {
             indexPathsToReload.append(IndexPath(row: prevSelected, section: 0))
         }
         
-        // Update the selected index
         selectedIndex = newIndex
-        
-        // Reload with nice animation
         tableView.reloadRows(at: indexPathsToReload, with: .automatic)
         
-        // Notify the selection handler
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.selectionHandler?(newIndex)
         }

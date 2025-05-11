@@ -74,19 +74,14 @@ class ExerciseOptionCell: UITableViewCell {
     
     func configure(with option: String, isSelected: Bool) {
         optionLabel.text = option
-        
-        // Set radioButton image based on selection state
+
         let imageName = isSelected ? "largecircle.fill.circle" : "circle"
         radioButton.setImage(UIImage(systemName: imageName), for: .normal)
-        
-        // Animate selection change (subtle border color change)
+
         UIView.animate(withDuration: 0.2) {
-            self.selectionIndicator.alpha = isSelected ? 1 : 0
-//            self.containerView.layer.borderColor = isSelected ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
             self.containerView.transform = isSelected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
         }
-        
-        // Spring animation on selection
+
         if isSelected {
             UIView.animate(withDuration: 0.4,
                            delay: 0,
@@ -102,4 +97,7 @@ class ExerciseOptionCell: UITableViewCell {
             }
         }
     }
+    
+    
+
 }

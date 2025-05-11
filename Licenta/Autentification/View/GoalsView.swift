@@ -37,25 +37,25 @@ class GoalsView: UIView {
     // MARK: - UI Setup
     private func setupUI() {
         backgroundColor = .black
-        
+
         titleLabel.text = "Goals"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 36)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .center
-        
+
         subtitleLabel.text = "Choose as much as you want"
         subtitleLabel.font = UIFont.systemFont(ofSize: 16)
         subtitleLabel.textColor = .lightGray
         subtitleLabel.textAlignment = .center
-        
+
         addSubview(titleLabel)
         addSubview(subtitleLabel)
         addSubview(stackView)
-        
+
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.distribution = .fillEqually
-        
+
         for (index, goal) in goals.enumerated() {
             let optionView = GoalOptionView(title: goal.title, subtitle: goal.subtitle)
             optionView.tag = index
@@ -65,8 +65,9 @@ class GoalsView: UIView {
             optionViews.append(optionView)
             stackView.addArrangedSubview(optionView)
         }
-        
+
         setupConstraints()
+        selectOption(at: 0) // <- selectează implicit primul
     }
     
     private func setupConstraints() {
@@ -196,8 +197,7 @@ class GoalOptionView: UIView {
         selectionImageView.image = UIImage(systemName: imageName)
         
         UIView.animate(withDuration: 0.2) {
-            self.highlightOverlay.alpha = selected ? 1 : 0
-            self.containerView.layer.borderColor = selected ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
+            // self.highlightOverlay.alpha = selected ? 1 : 0
             self.containerView.transform = selected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
         }
         

@@ -99,8 +99,8 @@ class FitnessLevelOptionView: UIView {
         selectionImageView.image = UIImage(systemName: imageName)
         
         UIView.animate(withDuration: 0.2) {
-            self.highlightOverlay.alpha = selected ? 1 : 0
-            self.containerView.layer.borderColor = selected ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
+//            self.highlightOverlay.alpha = selected ? 1 : 0
+//            self.containerView.layer.borderColor = selected ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
             self.containerView.transform = selected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
         }
         
@@ -123,4 +123,8 @@ class FitnessLevelOptionView: UIView {
     @objc private func didTap() {
         onTap?()
     }
+    
+    
+    
+    
 }
