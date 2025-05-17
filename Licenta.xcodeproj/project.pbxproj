@@ -11,6 +11,11 @@
 		953744212DC57EAC0030A649 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953744202DC57EAC0030A649 /* GoalsView.swift */; };
 		9537442E2DC5876A0030A649 /* AccountDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537442D2DC5876A0030A649 /* AccountDetailsView.swift */; };
 		953744362DCAA0170030A649 /* WeightSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953744352DCAA0170030A649 /* WeightSelectionView.swift */; };
+		9537443F2DD76F5C0030A649 /* ProgramsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537443E2DD76F5C0030A649 /* ProgramsViewController.swift */; };
+		953744462DD796430030A649 /* IntroToCaliViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953744452DD796420030A649 /* IntroToCaliViewController.swift */; };
+		953744522DD7BB020030A649 /* PullUpChinUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953744512DD7BB020030A649 /* PullUpChinUpViewController.swift */; };
+		9537445A2DD7C59C0030A649 /* PushUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953744592DD7C59C0030A649 /* PushUpViewController.swift */; };
+		9537445F2DD7C7680030A649 /* WorkoutInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537445E2DD7C7680030A649 /* WorkoutInfoView.swift */; };
 		9546AEE72D921FA200ED8BD8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AEE62D921FA200ED8BD8 /* AppDelegate.swift */; };
 		9546AEE92D921FA200ED8BD8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546AEE82D921FA200ED8BD8 /* SceneDelegate.swift */; };
 		9546AEEE2D921FA200ED8BD8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9546AEEC2D921FA200ED8BD8 /* Main.storyboard */; };
@@ -66,6 +71,11 @@
 		953744202DC57EAC0030A649 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 		9537442D2DC5876A0030A649 /* AccountDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsView.swift; sourceTree = "<group>"; };
 		953744352DCAA0170030A649 /* WeightSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightSelectionView.swift; sourceTree = "<group>"; };
+		9537443E2DD76F5C0030A649 /* ProgramsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramsViewController.swift; sourceTree = "<group>"; };
+		953744452DD796420030A649 /* IntroToCaliViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroToCaliViewController.swift; sourceTree = "<group>"; };
+		953744512DD7BB020030A649 /* PullUpChinUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullUpChinUpViewController.swift; sourceTree = "<group>"; };
+		953744592DD7C59C0030A649 /* PushUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushUpViewController.swift; sourceTree = "<group>"; };
+		9537445E2DD7C7680030A649 /* WorkoutInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutInfoView.swift; sourceTree = "<group>"; };
 		9546AEE32D921FA200ED8BD8 /* Licenta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Licenta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9546AEE62D921FA200ED8BD8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9546AEE82D921FA200ED8BD8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -133,15 +143,66 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9537443A2DD76F1E0030A649 /* HomeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				9537443D2DD76F320030A649 /* VIewModel */,
+				9537443C2DD76F2D0030A649 /* Model */,
+				9537443B2DD76F260030A649 /* View */,
+			);
+			path = HomeScreen;
+			sourceTree = "<group>";
+		};
+		9537443B2DD76F260030A649 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9537443E2DD76F5C0030A649 /* ProgramsViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9537443C2DD76F2D0030A649 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9537443D2DD76F320030A649 /* VIewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = VIewModel;
+			sourceTree = "<group>";
+		};
+		953744432DD795F00030A649 /* Workouts */ = {
+			isa = PBXGroup;
+			children = (
+				953744442DD796210030A649 /* VIew */,
+			);
+			path = Workouts;
+			sourceTree = "<group>";
+		};
+		953744442DD796210030A649 /* VIew */ = {
+			isa = PBXGroup;
+			children = (
+				953744452DD796420030A649 /* IntroToCaliViewController.swift */,
+				953744592DD7C59C0030A649 /* PushUpViewController.swift */,
+				9537445E2DD7C7680030A649 /* WorkoutInfoView.swift */,
+				953744512DD7BB020030A649 /* PullUpChinUpViewController.swift */,
+			);
+			path = VIew;
+			sourceTree = "<group>";
+		};
 		9546AEDA2D921FA200ED8BD8 = {
 			isa = PBXGroup;
 			children = (
+				C2670F9AAE339E70F612F114 /* Frameworks */,
 				9546AEE52D921FA200ED8BD8 /* Licenta */,
 				9546AEFF2D921FA600ED8BD8 /* LicentaTests */,
 				9546AF0A2D921FA600ED8BD8 /* LicentaUITests */,
-				9546AEE42D921FA200ED8BD8 /* Products */,
 				E8464012D224926132AAC9F1 /* Pods */,
-				C2670F9AAE339E70F612F114 /* Frameworks */,
+				9546AEE42D921FA200ED8BD8 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -159,14 +220,16 @@
 			isa = PBXGroup;
 			children = (
 				95EA0D162D98A17A00C707C4 /* AccountSettings */,
-				9546AEF72D921FA500ED8BD8 /* Info.plist */,
 				95EA0CDF2D94BB9500C707C4 /* App */,
 				95EA0CE92D94BC0D00C707C4 /* Autentification */,
-				9583DDDD2DB9815B00472800 /* Notifications */,
-				95EA0CE12D94BBE100C707C4 /* Settings */,
 				95EA0CE22D94BBF600C707C4 /* FitnessProfile */,
-				95EA0CE02D94BBB000C707C4 /* Resources */,
+				9537443A2DD76F1E0030A649 /* HomeScreen */,
+				9546AEF72D921FA500ED8BD8 /* Info.plist */,
 				95EA0CEB2D94BC4400C707C4 /* Models */,
+				9583DDDD2DB9815B00472800 /* Notifications */,
+				95EA0CE02D94BBB000C707C4 /* Resources */,
+				95EA0CE12D94BBE100C707C4 /* Settings */,
+				953744432DD795F00030A649 /* Workouts */,
 			);
 			path = Licenta;
 			sourceTree = "<group>";
@@ -596,7 +659,9 @@
 				9568E6F02DC4618F00AE695F /* ExerciseOptionCell.swift in Sources */,
 				953744362DCAA0170030A649 /* WeightSelectionView.swift in Sources */,
 				9583DDA02DB9777A00472800 /* CreateAccountModel.swift in Sources */,
+				953744462DD796430030A649 /* IntroToCaliViewController.swift in Sources */,
 				9568E6EB2DC4587400AE695F /* HeightSelectionView.swift in Sources */,
+				953744522DD7BB020030A649 /* PullUpChinUpViewController.swift in Sources */,
 				9583DDB02DB977D100472800 /* CreateAccountViewModel.swift in Sources */,
 				9568E6FA2DC465C100AE695F /* FitnessLevelOptionView.swift in Sources */,
 				9583DDD02DB97E7C00472800 /* SettingsViewModel.swift in Sources */,
@@ -612,11 +677,14 @@
 				9583DDE52DB981BA00472800 /* NotificationModel.swift in Sources */,
 				9537442E2DC5876A0030A649 /* AccountDetailsView.swift in Sources */,
 				9546AEE92D921FA200ED8BD8 /* SceneDelegate.swift in Sources */,
+				9537445A2DD7C59C0030A649 /* PushUpViewController.swift in Sources */,
 				95EA0CD62D94B2B700C707C4 /* FitnessProfileViewController.swift in Sources */,
 				95EA0CCC2D94A8E400C707C4 /* SettingsViewController.swift in Sources */,
 				9583DDC72DB97E3400472800 /* SettingsModel.swift in Sources */,
 				95EA0D182D98A19400C707C4 /* AccountSettingsViewController.swift in Sources */,
+				9537445F2DD7C7680030A649 /* WorkoutInfoView.swift in Sources */,
 				953744212DC57EAC0030A649 /* GoalsView.swift in Sources */,
+				9537443F2DD76F5C0030A649 /* ProgramsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

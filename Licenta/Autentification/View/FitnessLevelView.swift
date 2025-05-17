@@ -9,7 +9,6 @@ class FitnessLevelView: UIView {
     
     // MARK: - Properties
     private let levels: [(title: String, subtitle: String)] = [
-        ("Newbie", "I've never trained before"),
         ("Beginner", "Some experience"),
         ("Intermediate", "Experience with consistent training"),
         ("Advanced", "Consistent training like pro")
